@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: #000c18;
+  width: 100vw;
+  height: 100vh;
+  color: white;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+input:focus {
+  outline: none;
+}
+@font-face {
+  font-family: "Maginors";
+  src: url("/assets/fonts/maginors-cdnfonts/maginors-maginors-400.otf");
+}
+@font-face {
+  font-family: "Elmono";
+  src: url("/assets/fonts/elmono/Elmono-regular.ttf");
+}
+#home-bg {
+  position: absolute !important;
+}
+.search-page {
+  width: 100%;
+  font-family: "Elmono";
+}
+.search-page .search-wrapper {
+  width: 50%;
+  height: 60px;
+  border: 3px solid white;
+  border-radius: 5px;
+  backdrop-filter: blur(20px);
+}
+.search-page .search-wrapper:before {
+  content: "";
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  filter: blur(10px);
+  background-color: rgba(240, 248, 255, 0.253);
+}
+.search-page .search-wrapper label input {
+  background-color: transparent;
+  color: white;
+}
+.typer-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 3.2%;
+  translate: 0% -50%;
+}
+label.warning .typer-wrapper {
+  color: red !important;
+}
+
+.songs-wrapper {
+  width: 40%;
+}
+.songs-wrapper .song-wrapper {
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(to left, transparent 30%, var(--color) 100%);
+  background-size: 100%;
+  transition: background-size 1s ease;
+}
+.songs-wrapper .song-wrapper:hover {
+  background-size: 150%;
+}
+.songs-wrapper .song-wrapper .song-details {
+  width: 400px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+nav .search-wrapper {
+  width: 40%;
+  height: 40px;
+  border-radius: 10px;
+}
+nav .search-wrapper label input {
+  border-radius: 5px;
+}
+canvas {
+  top: 0%;
+  bottom: 0%;
+  position: fixed !important;
+}
+@media only screen and (max-width: 500px) {
+  .search-page .search-wrapper {
+    width: 100%;
+  }
+  .songs-wrapper {
+    width: 100%;
+  }
+  .songs-wrapper .song-wrapper .song-details {
+    width: 150px;
+  }
+  nav .search-wrapper {
+    width: 100%;
+    border-radius: 10px;
+  }
+}

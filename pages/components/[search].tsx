@@ -1,0 +1,145 @@
+import axios from "axios";
+import { useRouter } from "next/router";
+import React, { useEffect, useRef, useState } from "react";
+import { useQuery, gql, useLazyQuery } from "@apollo/client";
+import Image from "next/image";
+import { AiOutlineCloudDownload } from "react-icons/ai";
+// @ts-ignore
+import { usePalette } from "react-palette";
+import { SongsI } from "../../Types-interfaces";
+import Navbar from "./Navbar";
+import Vanta from "./Vanta";
+
+const getSongs = gql`
+  query Query($query: String!) {
+    search(query: $query) {
+      songs {
+        id
+        name
+        thumbnail
+        title
+      }
+    }
+  }
+`;
+const getDownload_url = gql`
+  query Query($downloadId: String!) {
+    download(id: $downloadId) {
+      download_url
+    }
+  }
+`;
+
+const Song = (SongsI: {
+  id: string;
+  name: string;
+  thumbnail: string;
+  title: string;
+}) => {
+  const {
+    data: dataPalette,
+    loading: loadingPalette,
+    error: errorPalette,
+  } = usePalette(SongsI.thumbnail);
+
+  const [getDownload, {
+    loading: loading_download_url,
+    error: error_download_url,
+    data: download_url,
+  }] = useLazyQuery(getDownload_url, { variables: { downloadId: SongsI.id } });
+
+  const mount = useRef(false);
+  const main = useRef<HTMLDivElement>(null);
+  
+  const handleClick = () => {
+    getDownload()
+  }
+  useEffect(() => {
+    if(download_url){
+      console.log(download_url.download.download_url)
+      window.open(download_url.download.download_url)
+    }
+  },[download_url])
+  useEffect(() => {
+    if (!loadingPalette) {
+      main.current?.style.setProperty("--color", dataPalette.vibrant!);
+    }
+  }, [dataPalette]);
+
+  return !loadingPalette ? (
+    <div
+      ref={main}
+      className="song-wrapper my-1 cursor-pointer flex items-center justify-between"
+    >
+      <div className="flex">
+        <figure className="">
+          <Image
+            alt={SongsI.name}
+            src={SongsI.thumbnail}
+            width={70}
+            height={70}
+            loading="lazy"
+            crossOrigin="anonymous"
+          />
+        </figure>
+        <div className="mx-5 my-auto">
+          <p className="song-details">{SongsI.name}</p>
+          <p className="song-details text-gray-400 text-sm">{SongsI.title}</p>
+        </div>
+      </div>
+      <a href="#" onClick={handleClick} className="mr-5">
+        <AiOutlineCloudDownload size={25} />
+      </a>
+    </div>
+  ) : (
+    <div className="h-96"></div>
+  );
+};
+
+const Songs = ({ query }) => {
+  var { loading, error, data } = useQuery(getSongs, {
+    variables: {
+      query,
+    },
+  });
+
+  const [songs, setSongs] = useState<SongsI[]>();
+
+  useEffect(() => {
+    if (data) setSongs(data.search.songs);
+  }, [data]);
+
+  return (
+    <div className="w-full min-h-1/2 my-5">
+      {songs && songs.map((song) => <Song {...song} />)}
+    </div>
+  );
+};
+
+const Results = () => {
+  const router = useRouter();
+  const [query, setQuery] = useState(router.query.search || null);
+  const mount = useRef(false);
+
+  useEffect(() => {
+    if (mount.current) {
+      setQuery(sessionStorage.getItem("search"));
+    } else mount.current = true;
+  }, []);
+
+  return (
+    <Vanta>
+      <div className="w-full absolute z-10 top-0">
+        <Navbar />
+        <div className="p-5">
+          <div className="songs-wrapper">
+            <h1 className="text-4xl lg:text-5xl w-full">Songs List</h1>
+            {query && <Songs query={query} />}
+          </div>
+        </div>
+      </div>
+    </Vanta>
+  );
+};
+
+export default Results;
