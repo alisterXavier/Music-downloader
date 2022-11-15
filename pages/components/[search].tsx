@@ -4,8 +4,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useQuery, gql, useLazyQuery } from "@apollo/client";
 import Image from "next/image";
 import { AiOutlineCloudDownload } from "react-icons/ai";
-// @ts-ignore
-import { usePalette } from "react-palette";
 import { SongsI } from "../../Types-interfaces";
 import Navbar from "./Navbar";
 import Vanta from "./Vanta";
@@ -36,48 +34,39 @@ const Song = (SongsI: {
   thumbnail: string;
   title: string;
 }) => {
-  const {
-    data: dataPalette,
-    loading: loadingPalette,
-    error: errorPalette,
-  } = usePalette(SongsI.thumbnail);
-
-  const [getDownload, {
-    loading: loading_download_url,
-    error: error_download_url,
-    data: download_url,
-  }] = useLazyQuery(getDownload_url, { variables: { downloadId: SongsI.id } });
+  const [
+    getDownload,
+    {
+      loading: loading_download_url,
+      error: error_download_url,
+      data: download_url,
+    },
+  ] = useLazyQuery(getDownload_url, { variables: { downloadId: SongsI.id } });
 
   const mount = useRef(false);
   const main = useRef<HTMLDivElement>(null);
-  
-  const handleClick = () => {
-    getDownload()
-  }
-  useEffect(() => {
-    if(download_url){
-      console.log(download_url.download.download_url)
-      window.open(download_url.download.download_url)
-    }
-  },[download_url])
-  useEffect(() => {
-    if (!loadingPalette) {
-      main.current?.style.setProperty("--color", dataPalette.vibrant!);
-    }
-  }, [dataPalette]);
 
-  return !loadingPalette ? (
+  const handleClick = () => {
+    getDownload();
+  };
+  useEffect(() => {
+    if (download_url) {
+      window.open(download_url.download.download_url);
+    }
+  }, [download_url]);
+
+  return (
     <div
       ref={main}
-      className="song-wrapper my-1 cursor-pointer flex items-center justify-between"
+      className="song-wrapper cursor-pointer flex items-center justify-between"
     >
       <div className="flex">
         <figure className="">
           <Image
             alt={SongsI.name}
             src={SongsI.thumbnail}
-            width={70}
-            height={70}
+            width={90}
+            height={90}
             loading="lazy"
             crossOrigin="anonymous"
           />
@@ -91,8 +80,6 @@ const Song = (SongsI: {
         <AiOutlineCloudDownload size={25} />
       </a>
     </div>
-  ) : (
-    <div className="h-96"></div>
   );
 };
 
@@ -110,7 +97,7 @@ const Songs = ({ query }) => {
   }, [data]);
 
   return (
-    <div className="w-full min-h-1/2 my-5">
+    <div className="w-full min-h-1/2 my-1">
       {songs && songs.map((song) => <Song {...song} />)}
     </div>
   );
@@ -131,9 +118,9 @@ const Results = () => {
     <Vanta>
       <div className="w-full absolute z-10 top-0">
         <Navbar />
-        <div className="p-5">
-          <div className="songs-wrapper">
-            <h1 className="text-4xl lg:text-5xl w-full">Songs List</h1>
+        <div className="lg:p-5">
+          <div className="songs-wrapper mx-auto">
+            <h1 className="text-4xl lg:text-5xl w-full py-4">Songs List</h1>
             {query && <Songs query={query} />}
           </div>
         </div>

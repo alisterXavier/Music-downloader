@@ -72,12 +72,12 @@ label.warning .typer-wrapper {
 }
 
 .songs-wrapper {
-  width: 40%;
+  width: 75%;
 }
 .songs-wrapper .song-wrapper {
   width: 100%;
-  height: 60px;
-  background: linear-gradient(to left, transparent 30%, var(--color) 100%);
+  height: 90px;
+  background: linear-gradient(to left, transparent 30%, grey 100%);
   background-size: 100%;
   transition: background-size 1s ease;
 }
@@ -110,6 +110,7 @@ canvas {
   }
   .songs-wrapper {
     width: 100%;
+    height: 60px;
   }
   .songs-wrapper .song-wrapper .song-details {
     width: 150px;
