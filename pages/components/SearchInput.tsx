@@ -24,6 +24,7 @@ const SearchInput = () => {
 
   useEffect(() => {
     if (mount.current) {
+      console.log("sss")
       typer = new Typed(".typer", options);
     } else mount.current = true;
 
