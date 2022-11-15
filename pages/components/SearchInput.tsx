@@ -12,21 +12,17 @@ const SearchInput = () => {
     loop: true,
   };
 
-  const onChange = (e : ChangeEvent<HTMLInputElement>) => {
-    const { value } = (e.target as HTMLInputElement);
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target as HTMLInputElement;
     if (value.length > 0) {
       if (typer) {
-        console.log(value)
         typer.destroy();
       }
     } else typer = new Typed(".typer", options);
   };
 
   useEffect(() => {
-    if (mount.current) {
-      console.log("sss")
-      typer = new Typed(".typer", options);
-    } else mount.current = true;
+    typer = new Typed(".typer", options);
 
     window.addEventListener("resize", function () {
       let canvas = document.querySelector(".vanta-canvas") as HTMLCanvasElement;
