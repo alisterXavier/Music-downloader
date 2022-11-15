@@ -2,7 +2,7 @@ import SearchInput from "./SearchInput";
 
 const Navbar = () => {
   return (
-    <nav className="nav lg:mx-5 my-5 flex justify-center items-center">
+    <nav className="nav mx-2 lg:mx-5 my-5 flex justify-center items-center">
       <SearchInput />
     </nav>
   );

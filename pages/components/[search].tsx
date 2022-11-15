@@ -118,7 +118,7 @@ const Results = () => {
     <Vanta>
       <div className="w-full absolute z-10 top-0">
         <Navbar />
-        <div className="lg:p-5">
+        <div className="px-2 lg:p-5">
           <div className="songs-wrapper mx-auto">
             <h1 className="text-4xl lg:text-5xl w-full py-4">Songs List</h1>
             {query && <Songs query={query} />}
