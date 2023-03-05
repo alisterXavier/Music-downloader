@@ -43,7 +43,6 @@ const Song = (SongsI: {
     },
   ] = useLazyQuery(getDownload_url, { variables: { downloadId: SongsI.id } });
 
-  const mount = useRef(false);
   const main = useRef<HTMLDivElement>(null);
 
   const handleClick = () => {
@@ -98,7 +97,13 @@ const Songs = ({ query }) => {
 
   return (
     <div className="w-full min-h-1/2 my-1">
-      {songs && songs.map((song) => <Song {...song} />)}
+      {songs ? songs.map((song) => <Song {...song} />) 
+      : 
+        <div className="">
+          <Image alt="bunny down" src='https://media.tenor.com/rRlw_c7ugQAAAAAi/white-rabbit.gif' width={200} height={150}/>
+          <h1 className="text-3xl">Server is down XD.</h1>
+        </div>
+      }
     </div>
   );
 };
@@ -106,13 +111,10 @@ const Songs = ({ query }) => {
 const Results = () => {
   const router = useRouter();
   const [query, setQuery] = useState(router.query.search || null);
-  const mount = useRef(false);
 
   useEffect(() => {
-    if (mount.current) {
-      setQuery(sessionStorage.getItem("search"));
-    } else mount.current = true;
-  }, []);
+    if (router.query.search) setQuery(router.query.search);
+  }, [router.asPath]);
 
   return (
     <Vanta>
@@ -128,5 +130,4 @@ const Results = () => {
     </Vanta>
   );
 };
-
 export default Results;

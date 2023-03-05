@@ -1,4 +1,6 @@
-import { gql, ApolloServer } from "apollo-server-micro";
+import { ApolloServer } from '@apollo/server';
+import { startServerAndCreateNextHandler } from '@as-integrations/next';
+import { gql } from 'graphql-tag';
 import axios from "axios";
 
 const typeDefs = gql`
@@ -37,16 +39,23 @@ const resolvers = {
           "X-RapidAPI-Host": "youtube-music1.p.rapidapi.com",
         },
       };
-      const res = await axios.request(optionsMain).then(function (response) {
-        return response.data.result.songs.map((results) => {
-          return {
-            id: results.id,
-            name: results.name,
-            title: results.title,
-            thumbnail: results.thumbnail,
-          };
+
+      const res = await axios
+        .request(optionsMain)
+        .then(function (response) {
+          return response.data.result.songs.map((results) => {
+            return {
+              id: results.id,
+              name: results.name,
+              title: results.title,
+              thumbnail: results.thumbnail,
+            };
+          });
+        })
+        .catch((err) => {
+          if(err.code === "ERR_BAD_RESPONSE")
+            return new Error("api down")
         });
-      });
       return { songs: res };
     },
     download: async (_: any, { id }) => {
@@ -75,15 +84,4 @@ apolloServer = new ApolloServer({
   resolvers,
 });
 
-const serverStart = apolloServer.start();
-
-export default async function handler(req, res) {
-  await serverStart;
-  await apolloServer.createHandler({ path: "/api/graphql" })(req, res);
-}
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+export default startServerAndCreateNextHandler(apolloServer)

@@ -1,29 +1,20 @@
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useRef } from "react";
-import Typed from "typed.js";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { TypeAnimation } from "react-type-animation";
 
-var typer;
 const SearchInput = () => {
   const router = useRouter();
   const mount = useRef(false);
-  var options = {
-    strings: ["Harry Styles", "Avicii", "Sweater Weather", "Outside"],
-    typeSpeed: 50,
-    loop: true,
-  };
+  const [search, setSearch] = useState<string>("");
+
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target as HTMLInputElement;
     if (value.length > 0) {
-      if (typer) {
-        typer.destroy();
-      }
-    } else typer = new Typed(".typer", options);
+    }
   };
 
   useEffect(() => {
-    typer = new Typed(".typer", options);
-
     window.addEventListener("resize", function () {
       let canvas = document.querySelector(".vanta-canvas") as HTMLCanvasElement;
       canvas.style.width = `${window.innerWidth}`;
@@ -39,10 +30,10 @@ const SearchInput = () => {
           onChange={onChange}
           onKeyDown={(e) => {
             const { value } = e.target as HTMLInputElement;
+            setSearch(value);
             if (e.key === "Enter")
               if (value.length > 0) {
-                sessionStorage.setItem("search", value);
-                router.push(`components/${value}`);
+                router.push(`/components/${value}`);
               } else {
                 (e.target as HTMLInputElement).parentElement?.classList.add(
                   "warning"
@@ -55,9 +46,26 @@ const SearchInput = () => {
               }
           }}
         />
-        <div className="typer-wrapper text-gray-400">
-          <span className="typer"></span>
-        </div>
+        {search.length === 0 && (
+          <div className="typer-wrapper text-gray-400">
+            <TypeAnimation
+              sequence={[
+                "Harry Styles",
+                1500,
+                "Avicii",
+                1500,
+                "Sweater Weather",
+                1500,
+                "Outside",
+                1500,
+              ]}
+              wrapper="div"
+              cursor={true}
+              repeat={Infinity}
+              style={{ fontSize: "1em" }}
+            />
+          </div>
+        )}
       </label>
       <p className="text-gray-400">Search for any music, artist or album.</p>
     </div>
