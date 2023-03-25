@@ -102,7 +102,7 @@ const Songs = ({ query }) => {
         <div className="">
           <Image alt="bunny down" src='https://media.tenor.com/rRlw_c7ugQAAAAAi/white-rabbit.gif' width={200} height={150}/>
           <h1 className="text-3xl">Server is down XD.</h1>
-        </div>
+        </div> 
       }
     </div>
   );
